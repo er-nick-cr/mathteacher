@@ -39,6 +39,32 @@
         </div>
     </footer>
 
+    <!-- Image Modal -->
+    <div id="image-modal" class="image-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Закрыть">×</button>
+            <button id="modal-prev" class="modal-nav modal-nav-prev" aria-label="Предыдущее изображение">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <button id="modal-next" class="modal-nav modal-nav-next" aria-label="Следующее изображение">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <img id="modal-image" src="" alt="" class="modal-image">
+            <div class="modal-info">
+                <h3 id="modal-title" class="modal-title"></h3>
+                <a id="modal-download" class="download-btn" download>
+                    <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="1.6"/><polyline points="7 10 12 15 17 10" stroke="currentColor" stroke-width="1.6"/><line x1="12" y1="15" x2="12" y2="3" stroke="currentColor" stroke-width="1.6"/></svg>
+                    <span>Скачать изображение</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
     <noscript>
         Включите JavaScript для корректной работы сайта.

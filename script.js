@@ -104,17 +104,23 @@ const ROUTES = {
       <h2>Результаты деятельности</h2>
       <div class="rule"></div>
       <p>
-        Достижения учащихся на олимпиадах и конкурсах, результаты промежуточной
-        и итоговой аттестации, участие в проектах и конференциях.
+         Участие в проектах и конференциях.
       </p>
-      <div class="grid" style="margin-top:18px;">
-        <div class="card">
-          <h3>Олимпиады и конкурсы</h3>
-          <p>Список наград и дипломов за последние годы.</p>
+      <div class="gallery" style="margin-top:18px;">
+        <div class="gallery-item" data-image="images/Благодарность Главы Республики Хакасия — Председателя Правительства Республики Хакасия.jpg">
+          <img src="images/Благодарность Главы Республики Хакасия — Председателя Правительства Республики Хакасия.jpg" alt="Благодарность Главы Республики Хакасия — Председателя Правительства Республики Хакасия" loading="lazy">
         </div>
-        <div class="card">
-          <h3>Итоговая аттестация</h3>
-          <p>Сводные показатели успеваемости и динамика результатов.</p>
+        <div class="gallery-item" data-image="images/Представление опыта работы на республиканских Свято-Иннокентьевских чтениях в 2024 году.jpg">
+          <img src="images/Представление опыта работы на республиканских Свято-Иннокентьевских чтениях в 2024 году.jpg" alt="Представление опыта работы на республиканских Свято-Иннокентьевских чтениях в 2024 году" loading="lazy">
+        </div>
+        <div class="gallery-item" data-image="images/Сертификат за участие в конференции Единое образовательное пространство современные возможности для качественного обучения и воспитания.jpg">
+          <img src="images/Сертификат за участие в конференции Единое образовательное пространство современные возможности для качественного обучения и воспитания.jpg" alt="Сертификат за участие в конференции Единое образовательное пространство современные возможности для качественного обучения и воспитания" loading="lazy">
+        </div>
+        <div class="gallery-item" data-image="images/Сертификат за участие в республиканских СВЯТО-ИННОКЕНТЬЕВСКИХ ЧТЕНИЯХ.jpg">
+          <img src="images/Сертификат за участие в республиканских СВЯТО-ИННОКЕНТЬЕВСКИХ ЧТЕНИЯХ.jpg" alt="Сертификат за участие в республиканских СВЯТО-ИННОКЕНТЬЕВСКИХ ЧТЕНИЯХ" loading="lazy">
+        </div>
+        <div class="gallery-item" data-image="images/Сертификат за участие в семинаре Духовно-нравственное воспитание обучающихся в православной гимназии_проблемы, опыт, перспективы.jpg">
+          <img src="images/Сертификат за участие в семинаре Духовно-нравственное воспитание обучающихся в православной гимназии_проблемы, опыт, перспективы.jpg" alt="Сертификат за участие в семинаре Духовно-нравственное воспитание обучающихся в православной гимназии_проблемы, опыт, перспективы" loading="lazy">
         </div>
       </div>
     `
@@ -174,10 +180,202 @@ function initNavClicks() {
   });
 }
 
+// Gallery state
+const IMAGE_DESCRIPTIONS = {
+  "Благодарность Главы Республики Хакасия — Председателя Правительства Республики Хакасия.jpg": "Благодарность Главы Республики Хакасия — Председателя Правительства Республики Хакасия",
+  "Представление опыта работы на республиканских Свято-Иннокентьевских чтениях в 2024 году.jpg": "Представление опыта работы на республиканских Свято-Иннокентьевских чтениях в 2024 году",
+  "Сертификат за участие в конференции Единое образовательное пространство современные возможности для качественного обучения и воспитания.jpg": "Сертификат за участие в конференции \"Единое образовательное пространство современные возможности для качественного обучения и воспитания\"",
+  "Сертификат за участие в республиканских СВЯТО-ИННОКЕНТЬЕВСКИХ ЧТЕНИЯХ.jpg": "Сертификат за участие в республиканских СВЯТО-ИННОКЕНТЬЕВСКИХ ЧТЕНИЯХ, посвященных \"80-летию Великой Победы: память и великий опыт поколений\"",
+  "Сертификат за участие в семинаре Духовно-нравственное воспитание обучающихся в православной гимназии_проблемы, опыт, перспективы.jpg": "Сертификат за участие в семинаре \"Духовно-нравственное воспитание обучающихся в православной гимназии: проблемы, опыт, перспективы\"",
+};
+let galleryImages = [];
+let currentImageIndex = -1;
+
+function getDescriptionFromFilename(filename) {
+  const name = filename.split('/').pop().split('\\').pop(); // извлекаем имя файла
+  return IMAGE_DESCRIPTIONS[name] || "Без описания"; // возвращаем описание или дефолт
+}
+
+function updateModalImage(index) {
+  if (index < 0 || index >= galleryImages.length) return;
+  
+  currentImageIndex = index;
+  const imageData = galleryImages[index];
+  const modal = document.getElementById('image-modal');
+  const modalImage = document.getElementById('modal-image');
+  const modalTitle = document.getElementById('modal-title');
+  const modalDownload = document.getElementById('modal-download');
+  const prevBtn = document.getElementById('modal-prev');
+  const nextBtn = document.getElementById('modal-next');
+  
+  if (!modal || !modalImage || !modalTitle || !modalDownload) return;
+  
+  const description = getDescriptionFromFilename(imageData.path);
+  modalImage.src = imageData.path;
+  modalImage.alt = imageData.alt || description;
+  modalTitle.textContent = description;
+  modalDownload.href = imageData.path;
+  modalDownload.download = imageData.path.split('/').pop().split('\\').pop();
+  
+  // Update navigation buttons
+  if (prevBtn) prevBtn.style.display = galleryImages.length > 1 ? 'flex' : 'none';
+  if (nextBtn) nextBtn.style.display = galleryImages.length > 1 ? 'flex' : 'none';
+  if (prevBtn) prevBtn.disabled = index === 0;
+  if (nextBtn) nextBtn.disabled = index === galleryImages.length - 1;
+}
+
+function openImageModal(imagePath, altText, index = -1) {
+  const modal = document.getElementById('image-modal');
+  if (!modal) return;
+  
+  // Find the index if not provided
+  if (index === -1) {
+    index = galleryImages.findIndex(img => img.path === imagePath);
+    if (index === -1) return;
+  }
+  
+  updateModalImage(index);
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function nextImage() {
+  if (currentImageIndex < galleryImages.length - 1) {
+    updateModalImage(currentImageIndex + 1);
+  }
+}
+
+function prevImage() {
+  if (currentImageIndex > 0) {
+    updateModalImage(currentImageIndex - 1);
+  }
+}
+
+function closeImageModal() {
+  const modal = document.getElementById('image-modal');
+  if (!modal) return;
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Initialize gallery using event delegation (works with dynamically added content)
+let galleryInitialized = false;
+function initGallery() {
+  // Only set up the listener once
+  if (galleryInitialized) return;
+  galleryInitialized = true;
+  
+  // Use document-level event delegation to handle clicks on gallery items
+  // This works even when content is dynamically replaced
+  document.addEventListener('click', function(e) {
+    const galleryItem = e.target.closest('.gallery-item');
+    if (!galleryItem) return;
+    
+    // Make sure the gallery item is within the content panel
+    const contentPanel = document.getElementById('content-root');
+    if (!contentPanel || !contentPanel.contains(galleryItem)) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Collect all gallery images
+    const allItems = contentPanel.querySelectorAll('.gallery-item');
+    galleryImages = Array.from(allItems).map((item, index) => {
+      const img = item.querySelector('img');
+      return {
+        path: item.getAttribute('data-image'),
+        alt: img ? img.alt : '',
+        index: index
+      };
+    });
+    
+    // Find clicked item index
+    const clickedIndex = Array.from(allItems).indexOf(galleryItem);
+    const imagePath = galleryItem.getAttribute('data-image');
+    const img = galleryItem.querySelector('img');
+    const altText = img ? img.alt : '';
+    
+    if (imagePath && clickedIndex >= 0) {
+      openImageModal(imagePath, altText, clickedIndex);
+    }
+  });
+}
+
+// Initialize modal handlers once on page load
+function initModalHandlers() {
+  const modal = document.getElementById('image-modal');
+  const modalClose = document.querySelector('.modal-close');
+  const modalOverlay = document.querySelector('.modal-overlay');
+  const modalContent = document.querySelector('.modal-content');
+  const prevBtn = document.getElementById('modal-prev');
+  const nextBtn = document.getElementById('modal-next');
+  
+  if (modalClose) {
+    modalClose.addEventListener('click', closeImageModal);
+  }
+  
+  // Close when clicking on background (modal-content but not on interactive elements)
+  if (modalContent) {
+    modalContent.addEventListener('click', (e) => {
+      // Close if clicking directly on modal-content (background) or overlay
+      // But not if clicking on image, buttons, or info panel
+      const isImage = e.target.id === 'modal-image' || e.target.closest('#modal-image');
+      const isButton = e.target.closest('.modal-nav') || e.target.closest('.modal-close') || e.target.closest('.download-btn');
+      const isInfo = e.target.closest('.modal-info');
+      
+      if (!isImage && !isButton && !isInfo && e.target === modalContent) {
+        closeImageModal();
+      }
+    });
+  }
+  
+  // Also close when clicking directly on overlay
+  if (modalOverlay) {
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) {
+        closeImageModal();
+      }
+    });
+  }
+  
+  // Navigation buttons
+  if (prevBtn) {
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      prevImage();
+    });
+  }
+  
+  if (nextBtn) {
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      nextImage();
+    });
+  }
+  
+  // Keyboard navigation
+  window.addEventListener('keydown', (e) => {
+    const modal = document.getElementById('image-modal');
+    if (!modal || !modal.classList.contains('active')) return;
+    
+    if (e.key === 'Escape') {
+      closeImageModal();
+    } else if (e.key === 'ArrowLeft') {
+      prevImage();
+    } else if (e.key === 'ArrowRight') {
+      nextImage();
+    }
+  });
+}
+
 window.addEventListener('hashchange', onHashChange);
 window.addEventListener('DOMContentLoaded', () => {
   initYear();
   initNavClicks();
+  initModalHandlers();
+  initGallery(); // Set up gallery event delegation once
   const initial = location.hash.replace('#','') || 'metod';
   render(initial);
 });
